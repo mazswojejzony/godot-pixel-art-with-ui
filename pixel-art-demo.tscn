@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=4 uid="uid://s2oxqqex6tjn"]
+
+[ext_resource type="Texture2D" uid="uid://dbxd7h3ldl8vi" path="res://Medieval_tiles_free_2.0.png" id="1_c8ine"]
+[ext_resource type="Texture2D" uid="uid://b7fbliggvqqag" path="res://Medieval_props_free.png" id="2_c8ine"]
+[ext_resource type="Script" uid="uid://bss4mgihbqfdc" path="res://character_body_2d.gd" id="2_pogxt"]
+[ext_resource type="FontFile" uid="uid://cxjb13budm4g7" path="res://PixelOperator8.ttf" id="4_pogxt"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x6yxq"]
+texture = ExtResource("1_c8ine")
+19:33/size_in_atlas = Vector2i(9, 1)
+19:33/0 = 0
+19:33/0/physics_layer_0/polygon_0/points = PackedVector2Array(-72, -8, 72, -8, 72, 4, -72, 4)
+31:25/size_in_atlas = Vector2i(3, 3)
+31:25/0 = 0
+31:25/0/physics_layer_0/polygon_0/points = PackedVector2Array(8, -24, 24.215942, -23.897305, 24, 24, -24, 24, -24, 13, -16, 13, -16, 4, -8, 4, -8, -5, 0, -5, 0, -14, 8, -14)
+40:25/size_in_atlas = Vector2i(3, 3)
+40:25/0 = 0
+40:25/0/physics_layer_0/polygon_0/points = PackedVector2Array(-24, -24, 24, -24, 24, 24, -24, 24)
+22:25/size_in_atlas = Vector2i(3, 3)
+22:25/0 = 0
+22:25/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -24, -24.215942, -23.897305, -24, 24, 24, 24, 24, 13, 16, 13, 16, 4, 8, 4, 8, -5, 0, -5, 0, -14, -8, -14)
+
+[sub_resource type="TileSet" id="TileSet_ctfw1"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_x6yxq")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1h056"]
+atlas = ExtResource("2_c8ine")
+region = Rect2(444, 59, 23, 26)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x6yxq"]
+radius = 11.0
+height = 26.0
+
+[node name="Node2D" type="Node2D"]
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAAEAP//AAATACEAAAANAP3/AAAfABkAAAANAP//AAATACEAAAAQAP3/AAAoABkAAAATAP3/AAAoABkAAAAWAP3/AAAWABkAAAAWAP//AAATACEAAAAeAP3/AAAfABkAAAAfAP//AAATACEAAAAhAP3/AAAoABkAAAAkAP3/AAAWABkAAAAoAP//AAATACEAAAA=")
+tile_set = SubResource("TileSet_ctfw1")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(84, -36)
+script = ExtResource("2_pogxt")
+
+[node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
+zoom = Vector2(8, 8)
+limit_left = 0
+limit_bottom = 0
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+texture = SubResource("AtlasTexture_1h056")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CapsuleShape2D_x6yxq")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -431.0
+offset_top = 31.0
+offset_right = -34.0
+offset_bottom = 119.0
+grow_horizontal = 0
+theme_override_fonts/font = ExtResource("4_pogxt")
+theme_override_font_sizes/font_size = 48
+text = "SCORE: 123"
+horizontal_alignment = 2
