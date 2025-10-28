@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=4 uid="uid://s2oxqqex6tjn"]
+[gd_scene load_steps=15 format=4 uid="uid://s2oxqqex6tjn"]
 
 [ext_resource type="Texture2D" uid="uid://dbxd7h3ldl8vi" path="res://Medieval_tiles_free_2.0.png" id="1_c8ine"]
 [ext_resource type="Texture2D" uid="uid://b7fbliggvqqag" path="res://Medieval_props_free.png" id="2_c8ine"]
 [ext_resource type="Script" uid="uid://bss4mgihbqfdc" path="res://character_body_2d.gd" id="2_pogxt"]
+[ext_resource type="Script" uid="uid://cxwldrhfsres7" path="res://animation_player.gd" id="3_1h056"]
+[ext_resource type="Script" uid="uid://boa5scnw8xkf7" path="res://camera_2d.gd" id="3_x6yxq"]
 [ext_resource type="FontFile" uid="uid://cxjb13budm4g7" path="res://PixelOperator8.ttf" id="4_pogxt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_x6yxq"]
@@ -24,36 +26,93 @@ texture = ExtResource("1_c8ine")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_x6yxq")
 
+[sub_resource type="Animation" id="Animation_x6yxq"]
+resource_name = "camera_anim"
+length = 2.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(56, 16), Vector2(135, 16)]
+}
+
+[sub_resource type="Animation" id="Animation_ctfw1"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(276, -5)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_i77or"]
+_data = {
+&"RESET": SubResource("Animation_ctfw1"),
+&"camera_anim": SubResource("Animation_x6yxq")
+}
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_1h056"]
 atlas = ExtResource("2_c8ine")
-region = Rect2(444, 59, 23, 26)
+region = Rect2(443, 58, 25, 28)
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x6yxq"]
-radius = 11.0
-height = 26.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1h056"]
+size = Vector2(14, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x6yxq"]
+size = Vector2(12, 26)
 
 [node name="Node2D" type="Node2D"]
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAAEAP//AAATACEAAAANAP3/AAAfABkAAAANAP//AAATACEAAAAQAP3/AAAoABkAAAATAP3/AAAoABkAAAAWAP3/AAAWABkAAAAWAP//AAATACEAAAAeAP3/AAAfABkAAAAfAP//AAATACEAAAAhAP3/AAAoABkAAAAkAP3/AAAWABkAAAAoAP//AAATACEAAAA=")
+position = Vector2(0, 133)
+tile_map_data = PackedByteArray("AAAEAP//AAATACEAAAANAP//AAATACEAAAAWAP//AAATACEAAAAeAP3/AAAfABkAAAAfAP//AAATACEAAAAhAP3/AAAoABkAAAAkAP3/AAAWABkAAAAoAP//AAATACEAAAAWAP3/AAAWABkAAAATAP3/AAAfABkAAAALAP3/AAAfABkAAAAOAP3/AAAWABkAAAA=")
 tile_set = SubResource("TileSet_ctfw1")
 
 [node name="CharacterBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(84, -36)
+position = Vector2(208, 49)
 script = ExtResource("2_pogxt")
 
 [node name="Camera2D" type="Camera2D" parent="CharacterBody2D"]
-zoom = Vector2(8, 8)
+position = Vector2(276, -5)
 limit_left = 0
-limit_bottom = 0
+limit_bottom = 134
 position_smoothing_enabled = true
 drag_horizontal_enabled = true
+script = ExtResource("3_x6yxq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="CharacterBody2D/Camera2D"]
+libraries = {
+&"": SubResource("AnimationLibrary_i77or")
+}
+script = ExtResource("3_1h056")
 
 [node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
 texture = SubResource("AtlasTexture_1h056")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
-shape = SubResource("CapsuleShape2D_x6yxq")
+shape = SubResource("RectangleShape2D_1h056")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2(400, 104)
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = SubResource("AtlasTexture_1h056")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+shape = SubResource("RectangleShape2D_x6yxq")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -61,12 +120,21 @@ shape = SubResource("CapsuleShape2D_x6yxq")
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -431.0
-offset_top = 31.0
-offset_right = -34.0
-offset_bottom = 119.0
+offset_left = -85.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 17.0
 grow_horizontal = 0
 theme_override_fonts/font = ExtResource("4_pogxt")
-theme_override_font_sizes/font_size = 48
-text = "SCORE: 123"
+theme_override_font_sizes/font_size = 8
+text = "12:34:56"
 horizontal_alignment = 2
+
+[node name="VersionLabel" type="Label" parent="CanvasLayer"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 85.0
+offset_bottom = 17.0
+theme_override_fonts/font = ExtResource("4_pogxt")
+theme_override_font_sizes/font_size = 8
+text = "stretch mode"
